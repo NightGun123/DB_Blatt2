@@ -28,29 +28,18 @@ public class DatenbankGateway {
 //            System.out.println("Error: unable to load driver class!");
 //            System.exit(1);
 //        }
-        String URL = "jdbc:oracle:thin:dnprak12/jebe2018@schelling.nt.fh-koeln.de:1521:xe";
+        String URL = "jdbc:oracle:thin:dbprak12/jebe2018@schelling.nt.fh-koeln.de:1521:xe";
         conn = DriverManager.getConnection(URL);
     }
-    public boolean InsertSQL(String sql) throws SQLException {
-        Statement st = conn.createStatement();
 
-        //Example: "Update Employees SET age = ? WHERE id = ?";
-        try{
-            st.executeQuery(sql);
-        }
-        catch (Exception e){
-            return false;
-        }
-        return true;
-    }
-    public ResultSet SelectSQL(String sql){
+    public ResultSet sql_befehl_ausfuehren(String sql){
         ResultSet rs = null;
 
         try{
             Statement st = conn.createStatement();
             rs = st.executeQuery(sql);
         }catch(Exception e){
-            return rs;
+            return null;
         }
         return rs;
 

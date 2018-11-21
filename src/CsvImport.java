@@ -33,14 +33,11 @@ public class CsvImport {
             String[] fn = idxLine.split("\\;");
             //'Insert Into ARTIKEL(artbez, mge, preis, kuehl,anzbo) values ('+ +')'
             //tempidxlist.add(new indexlist(fn[0],Integer.parseInt(fn[1])));
-            String sql = String.format("Insert Into ARTIKEL(artbez, mge, preis, kuehl,anzbo) values (%s,%s,5s,%s,%s)",fn[1],fn[2],fn[3],fn[4],fn[5]);
-            try {
-                gt.InsertSQL(sql);
+            String sql = String.format("Insert Into ARTIKEL(ARTBEZ, MGE, PREIS, KUEHL,ANZBO) values ('%s','%s',%s,'%s',%s)",fn[1],fn[2],fn[3],fn[4],fn[5]);
+            if(gt.sql_befehl_ausfuehren(sql)== null)
+                System.out.println("Fehler bei:: "+fn[1]);
+            else
                 System.out.println("Added: "+fn[1]);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                System.out.println("Failed: "+fn[1]);
-            }
 
             try {
                 idxLine = in.readLine();
