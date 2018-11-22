@@ -10,8 +10,13 @@ public class Hauptmenu {
      */
 
     static int menu_auswahl;
+    static String benutzereingabe_buffer;
+
+    static BufferedReader in
+            = new BufferedReader(new InputStreamReader(System.in));
 
     public static void starten() throws IOException, SQLException {
+
 
         while(true) {
 
@@ -22,12 +27,27 @@ public class Hauptmenu {
             System.out.println("4: Artikel suchen");
             System.out.println("5: Bestellung suchen");
             System.out.println("6: artikel.dat importieren");
-            System.out.println("7: Beenden");
+            System.out.println("7: Bestellung berechnen und ausgeben");
+            System.out.println("0: Beenden");
             System.out.println();
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-            menu_auswahl = Integer.parseInt(in.readLine());
+            try {
+
+                /**
+                 * Benutzereingabe Menüauswahl
+                 */
+
+                menu_auswahl = Integer.parseInt(in.readLine());
+
+            } catch (NumberFormatException e) {
+
+                e.printStackTrace();
+
+            } catch (IOException e) {
+
+                e.printStackTrace();
+            }
 
             switch (menu_auswahl) {
 
@@ -36,18 +56,69 @@ public class Hauptmenu {
                     Main.alle_artikel_ausgeben(Main.schelling);
                     break;
 
-                case 6:
+                case 2:
 
-                    System.out.print("CSV Datei Import: ");
+                    Main.alle_bestellungen_ausgeben(Main.schelling);
+                    break;
 
-                    ArtikelImport csvFileImporter =
-                            new ArtikelImport("resources/artikel.dat",Main.schelling);
+                case 3:
 
-                    System.out.println("Erfolgreich!\nBeginne mit dem Insert");
+                    Main.alle_kunden_ausgeben(Main.schelling);
+                    break;
 
-                    csvFileImporter.starte_csv_import();
+                case 4:
+
+                    System.out.println("Artikelnummer eingeben:");
+
+                    benutzereingabe_buffer = in.readLine();
+
+                    Main.zeige_stammdaten_und_bpos_von_artikel(benutzereingabe_buffer, Main.schelling);
 
                     break;
+
+                case 5:
+
+                    System.out.println("Bestellnummer eingeben:");
+
+                    benutzereingabe_buffer = in.readLine();
+
+                    Main.bestellung_ausgeben(Integer.parseInt(benutzereingabe_buffer), Main.schelling);
+
+                    break;
+
+                case 6:
+
+                System.out.print("CSV Datei Import: ");
+
+                ArtikelImport csvFileImporter =
+                            new ArtikelImport("resources/artikel.dat",Main.schelling);
+
+                System.out.println("Erfolgreich!\nBeginne mit dem Insert");
+
+                csvFileImporter.starte_csv_import();
+
+                break;
+
+
+                case 7:
+
+                    System.out.println("Bestellnummer eingeben:");
+
+                    benutzereingabe_buffer = in.readLine();
+
+                    Main.positionen_von_bestellung_holen(Integer.parseInt(benutzereingabe_buffer), Main.schelling);
+
+                    break;
+
+                case 0:
+
+                    System.exit(0);
+                    break;
+
+                default:
+
+                    continue;
+
             }
         }
 
