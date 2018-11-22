@@ -17,39 +17,75 @@ public class Main {
         println("Erfolgreich");
         println("CSV datei Improt");
         CsvImport csvFileImporter = new CsvImport("resources/artikel.dat",myDB);
-        println("Erfolgreich\nBeginne mit dem Insert");
+        //println("Erfolgreich\nBeginne mit dem Insert");
         //csvFileImporter.readCVSandInsert();
         try {
-            showARTIKEL(myDB);
+            showBestellung(myDB);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        try {
-            setzeWertinBPOSdurchPOSNR(2,myDB);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
         myDB.close();
     }
 
     public static void showARTIKEL(DatenbankGateway db) throws SQLException {
-        ResultSet ret = db.sql_befehl_ausfuehren("Select * From ARTIKEL");
+        printRS(db.sql_befehl_ausfuehren("Select * From ARTIKEL"));
 
-        ResultSetMetaData rsmd = ret.getMetaData();
+    }
+
+    public static void showBestellung(DatenbankGateway db) throws SQLException {
+        printRS(db.sql_befehl_ausfuehren("Select * From Bestellung"));
+    }
+    public static void showKunden(DatenbankGateway db) throws SQLException {
+        printRS(db.sql_befehl_ausfuehren("Select * From KUNDEN"));
+    }
+    public static void showArtikel_with_BPOS(DatenbankGateway db) throws SQLException {
+        printRS(db.sql_befehl_ausfuehren("Select * From ARTIKEL a left join BPOS b on a.ARTNR=b.ARTNR"));
+    }
+    public static void showOneBSTNR(int BESTNR,DatenbankGateway db) throws SQLException {
+        printRS(db.sql_befehl_ausfuehren(
+                "Select b.*, bp.*, a.ARTBEZ From BESTELLUNG b left join BPOS bp " +
+                        "on b.BESTNR=bp.BESTNR left join ARTIKEL a " +
+                        "on bp.ARTNR=a.ARTNR where bp.bestnr=" +BESTNR));
+    }
+
+    public static void printRS(ResultSet R) throws SQLException {
+        ResultSetMetaData rsmd = R.getMetaData();
         int columnsNumber = rsmd.getColumnCount();
-        while (ret.next()) {
+        while (R.next()) {
             for (int i = 1; i <= columnsNumber; i++) {
                 if (i > 1) System.out.print(",  ");
-                String columnValue = ret.getString(i);
+                String columnValue = R.getString(i);
                 System.out.print(columnValue + " " + rsmd.getColumnName(i));
             }
             System.out.println("");
         }
     }
-    public static void setzeWertinBPOSdurchPOSNR(int BPOSNR, DatenbankGateway db) throws SQLException {
 
+
+
+    public static void foreachBESTNR(int BESTNR, DatenbankGateway db) throws SQLException {
+        /*
+        Funktion 1 von 3
+
+         */
+        ResultSet rsBPOS = db.sql_befehl_ausfuehren("Select POSNR From BPOS WHERE BESTNR = "+BESTNR);
+        while(rsBPOS.next())
+        {
+            String POSNR_tmp = rsBPOS.getString(1);
+            int POSNRint = Integer.parseInt(POSNR_tmp);
+            setzeWertinBPOSdurchPOSNR(POSNRint,db);
+
+        }
+        setzeRSUMinBESTELLUNG(BESTNR,db);
+    }
+
+    public static void setzeWertinBPOSdurchPOSNR(int BPOSNR, DatenbankGateway db) throws SQLException {
+        /*
+        Funktion 2 von 3
+
+         */
         ResultSet rsBPOS = db.sql_befehl_ausfuehren("Select ARTNR From BPOS WHERE POSNR = "+BPOSNR);
         rsBPOS.next();
         String ARTNR = rsBPOS.getString(1);
@@ -62,9 +98,15 @@ public class Main {
 
     }
     public static void setzeRSUMinBESTELLUNG(int BESTNR,DatenbankGateway db) throws SQLException {
+        /*
+        Funktion 3 von 3
+
+         */
         ResultSet rsBPOS = db.sql_befehl_ausfuehren("Select SUM(WERT) as Summe From BPOS WHERE BESTNR = "+BESTNR);
         rsBPOS.next();
         String Summe = rsBPOS.getString(1);
+        db.sql_befehl_ausfuehren("UPDATE BESTELLUNG set RSUM = "+Summe+" WHERE BESTNR = "+BESTNR);
+        db.sql_befehl_ausfuehren("UPDATE BESTELLUNG set status = 1 WHERE BESTNR = "+BESTNR);
     }
 
 
