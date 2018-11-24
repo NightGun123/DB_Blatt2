@@ -49,6 +49,7 @@ public class DatenbankGateway {
 
         }catch(Exception e){
 
+            Main.println("Fehler beim Ausführen eines SQL Befehls!");
             return null;
         }
 

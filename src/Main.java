@@ -206,17 +206,16 @@ public class Main {
         String insert_befehl = new String(
 
                 "INSERT INTO bestellung (KNR, STATUS, BESTDAT) " +
-                        "VALUES (" + kundennummer + ", 1, " + best_datum + ")"
+                        "VALUES (" + kundennummer + ", 1, '" + best_datum + "')"
         );
 
         // Insert ausführen
         ResultSet insert_resultset = datenbankGateway.sql_befehl_ausfuehren(insert_befehl);
 
-        // Spalte ermitteln in der die bestellnummer steht
-        int spalte_bestnr = insert_resultset.findColumn("BESTNR");
-
         // Bestellnummer zurückgeben, von neuem Eintrag
-        return insert_resultset.getString(spalte_bestnr);
+        // TODO fix me
+        insert_resultset.next();
+        return insert_resultset.getString(1);
     }
 
     public static ResultSet bestellposition_eingeben(
@@ -241,12 +240,11 @@ public class Main {
         // Befehl ausführen
         ResultSet insert_bpos_resultset = datenbankGateway.sql_befehl_ausfuehren(insert_befehl);
 
-        // Spalte holen, in der die Positionsnummer steht
-        int spalte_posnr = insert_bpos_resultset.findColumn("POSNR");
-
         // Per Positionsnummer den Wert ermitteln aus Menge x Preis
+        // TODO fix me
+        insert_bpos_resultset.next();
         gesamtpreis_position_SQL_update(
-                Integer.parseInt(insert_bpos_resultset.getString(spalte_posnr)), datenbankGateway);
+                Integer.parseInt(insert_bpos_resultset.getString("POSNR")), datenbankGateway);
 
         return insert_bpos_resultset;
     }

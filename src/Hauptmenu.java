@@ -113,7 +113,7 @@ public class Hauptmenu {
 
                 case 8:
 
-
+                    Main.bestellvorgang_starten(Main.schelling);
 
                     break;
 
