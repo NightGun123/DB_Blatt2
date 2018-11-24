@@ -195,6 +195,23 @@ public class Main {
          * kundennummer.
          *
          * Anschließend wird eine Funktion zur Eingabe von Bestellpositionen aufgerufen.
+         *
+         * Positionsnummer hat Autoinkrement in SQL
+         */
+
+        String insert_befehl = new String(
+
+                "INSERT INTO bestellung (KNR, STATUS, BESTDAT) " +
+                        "VALUES (" + kundennummer + ", 1, " + best_datum + ")"
+        );
+
+        ResultSet neue_bestellung = datenbankGateway.sql_befehl_ausfuehren(insert_befehl);
+    }
+
+    public static void bestellpositions_eingeben(String artikelnummer, String bestellnummer,String menge) {
+
+        /**
+         * Fügt der übergebenen Bestellung einen Artikel in angegebener Menge hinzu.
          */
 
 
