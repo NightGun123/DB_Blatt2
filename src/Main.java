@@ -210,12 +210,13 @@ public class Main {
         );
 
         // Insert ausführen
-        ResultSet insert_resultset = datenbankGateway.sql_befehl_ausfuehren(insert_befehl);
+        datenbankGateway.sql_befehl_ausfuehren(insert_befehl);
 
-        // Bestellnummer zurückgeben, von neuem Eintrag
-        // TODO fix me
-        insert_resultset.next();
-        return insert_resultset.getString(1);
+        // ResultSet holen von hinzugefügten Eintrag
+        ResultSet hinzugef_eintrag = resultset_holen_letzter_eintrag_bestellungen(datenbankGateway);
+
+        hinzugef_eintrag.next();
+        return hinzugef_eintrag.getString(1);
     }
 
     public static ResultSet bestellposition_eingeben(
@@ -238,15 +239,16 @@ public class Main {
         );
 
         // Befehl ausführen
-        ResultSet insert_bpos_resultset = datenbankGateway.sql_befehl_ausfuehren(insert_befehl);
+        datenbankGateway.sql_befehl_ausfuehren(insert_befehl);
 
-        // Per Positionsnummer den Wert ermitteln aus Menge x Preis
-        // TODO fix me
-        insert_bpos_resultset.next();
+        ResultSet letzter_eintrag_bestellpos = resultset_holen_letzter_eintrag_bestellpos(datenbankGateway);
+
+        letzter_eintrag_bestellpos.next();
+
         gesamtpreis_position_SQL_update(
-                Integer.parseInt(insert_bpos_resultset.getString("POSNR")), datenbankGateway);
+                Integer.parseInt(letzter_eintrag_bestellpos.getString(1)), datenbankGateway);
 
-        return insert_bpos_resultset;
+        return letzter_eintrag_bestellpos;
     }
 
     public static void bestellvorgang_starten(DatenbankGateway datenbankGateway) throws IOException, SQLException {
@@ -310,6 +312,30 @@ public class Main {
 
         }
 
+    }
+
+    public static ResultSet resultset_holen_letzter_eintrag_bestellungen(DatenbankGateway datenbankGateway) {
+
+        /**
+         * Liefert den letzten Eintrag der Tabelle Bestellungen zurück.
+         */
+
+
+        return datenbankGateway.sql_befehl_ausfuehren(
+                "SELECT * FROM bestellung WHERE bestnr=(SELECT max(bestnr) FROM bestellung)"
+        );
+    }
+
+    public static ResultSet resultset_holen_letzter_eintrag_bestellpos(DatenbankGateway datenbankGateway) {
+
+        /**
+         * Liefert den letzten Eintrag der Tabelle Bestellpositionen zurück.
+         */
+
+
+        return datenbankGateway.sql_befehl_ausfuehren(
+                "SELECT * FROM bpos WHERE posnr=(SELECT max(posnr) FROM bpos);"
+        );
     }
 
 
