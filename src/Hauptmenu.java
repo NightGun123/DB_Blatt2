@@ -112,6 +112,7 @@ public class Hauptmenu {
 
                 case 0:
 
+                    Main.schelling.close();
                     System.exit(0);
                     break;
 

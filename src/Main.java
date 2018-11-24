@@ -75,8 +75,6 @@ public class Main {
          * ausgegeben und alle Bestelpositionen werden angezeigt.
          */
 
-        // TODO Artikelnummer übergeben
-
         printRS(db.sql_befehl_ausfuehren(
                 "Select * From ARTIKEL a left join BPOS b on a.ARTNR=b.ARTNR WHERE a.artnr = " + artikelnummer)
         );
@@ -186,6 +184,21 @@ public class Main {
         // Gesamtpreis eintragen und Status der Bestellung und Status wird auf 'geplant' gesetzt
         datenbankGateway.sql_befehl_ausfuehren("UPDATE BESTELLUNG set RSUM = "+Summe+" WHERE BESTNR = "+BESTNR);
         datenbankGateway.sql_befehl_ausfuehren("UPDATE BESTELLUNG set status = 1 WHERE BESTNR = "+BESTNR);
+    }
+
+    public static void bestellung_eingeben(String kundennummer, String best_datum, DatenbankGateway datenbankGateway) {
+
+        /**
+         * Bekommt eine Kundennummer übergeben und ein Datum. Legt dann in der Tabelle Bestellungen
+         * eine neue Zeile an. Die Bestellnummer wird per Autoimkrement bestimmt. Der Status wird auf 1 gesetzt.
+         * In die Spalte BESTDAT wird der Parameter best_datum eingetragen, in die Spalte KNR der Parameter
+         * kundennummer.
+         *
+         * Anschließend wird eine Funktion zur Eingabe von Bestellpositionen aufgerufen.
+         */
+
+
+
     }
 
 
