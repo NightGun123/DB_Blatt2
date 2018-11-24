@@ -134,7 +134,8 @@ public class Main {
         rech_summe_SQL_update(BESTNR,datenbankGateway);
     }
 
-    public static void gesamtpreis_position_SQL_update(int BPOSNR, DatenbankGateway datenbankGateway) throws SQLException {
+    public static void gesamtpreis_position_SQL_update(
+            int BPOSNR, DatenbankGateway datenbankGateway) throws SQLException {
 
         /**
          * Bekommt eine Bestellpositionsnummer übergeben.
@@ -208,12 +209,18 @@ public class Main {
         return datenbankGateway.sql_befehl_ausfuehren(insert_befehl);
     }
 
-    public static void bestellpositions_eingeben(DatenbankGateway datenbankGateway, String artikelnummer, String bestellnummer,String menge) {
+    public static ResultSet bestellposition_eingeben(
+            DatenbankGateway datenbankGateway, String artikelnummer, String bestellnummer,String menge)
+            throws SQLException {
 
         /**
-         * Fügt der übergebenen Bestellung einen Artikel in angegebener Menge hinzu.
+         * Fügt der übergebenen Bestellung einen Artikel in angegebener Menge als Bestelposition hinzu.
+         *
+         * Ruft Methode gesamtpreis_position_SQL_update auf, um den Gesamtwert der hinzugefügten Position in
+         * SQL upzudaten.
          */
 
+        // Befehlelsstring erstellen: Neuen Eintrag in Tabelle BPOS schreiben
         String insert_befehl =  new String(
 
                 "INSERT INTO bpos (artnr, bestnr, menge) " +
@@ -221,8 +228,17 @@ public class Main {
 
         );
 
-        datenbankGateway.sql_befehl_ausfuehren(insert_befehl);
+        // Befehl ausführen
+        ResultSet insert_bpos_resultset = datenbankGateway.sql_befehl_ausfuehren(insert_befehl);
 
+        // Spalte holen, in der die Positionsnummer steht
+        int spalte_posnr = insert_bpos_resultset.findColumn("POSNR");
+
+        // Per Positionsnummer den Wert ermitteln aus Menge x Preis
+        gesamtpreis_position_SQL_update(
+                Integer.parseInt(insert_bpos_resultset.getString(spalte_posnr)), datenbankGateway);
+
+        return insert_bpos_resultset;
     }
 
 
