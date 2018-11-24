@@ -186,7 +186,7 @@ public class Main {
         datenbankGateway.sql_befehl_ausfuehren("UPDATE BESTELLUNG set status = 1 WHERE BESTNR = "+BESTNR);
     }
 
-    public static void bestellung_eingeben(String kundennummer, String best_datum, DatenbankGateway datenbankGateway) {
+    public static ResultSet bestellung_eingeben(String kundennummer, String best_datum, DatenbankGateway datenbankGateway) {
 
         /**
          * Bekommt eine Kundennummer übergeben und ein Datum. Legt dann in der Tabelle Bestellungen
@@ -205,16 +205,23 @@ public class Main {
                         "VALUES (" + kundennummer + ", 1, " + best_datum + ")"
         );
 
-        ResultSet neue_bestellung = datenbankGateway.sql_befehl_ausfuehren(insert_befehl);
+        return datenbankGateway.sql_befehl_ausfuehren(insert_befehl);
     }
 
-    public static void bestellpositions_eingeben(String artikelnummer, String bestellnummer,String menge) {
+    public static void bestellpositions_eingeben(DatenbankGateway datenbankGateway, String artikelnummer, String bestellnummer,String menge) {
 
         /**
          * Fügt der übergebenen Bestellung einen Artikel in angegebener Menge hinzu.
          */
 
+        String insert_befehl =  new String(
 
+                "INSERT INTO bpos (artnr, bestnr, menge) " +
+                        "VALUES (" + artikelnummer + " ," + bestellnummer + ", " + menge + ")"
+
+        );
+
+        datenbankGateway.sql_befehl_ausfuehren(insert_befehl);
 
     }
 
