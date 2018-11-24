@@ -1,4 +1,6 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -187,7 +189,8 @@ public class Main {
         datenbankGateway.sql_befehl_ausfuehren("UPDATE BESTELLUNG set status = 1 WHERE BESTNR = "+BESTNR);
     }
 
-    public static ResultSet bestellung_eingeben(String kundennummer, String best_datum, DatenbankGateway datenbankGateway) {
+    public static String bestellung_eingeben(String kundennummer, String best_datum, DatenbankGateway datenbankGateway)
+            throws SQLException {
 
         /**
          * Bekommt eine Kundennummer übergeben und ein Datum. Legt dann in der Tabelle Bestellungen
@@ -195,9 +198,9 @@ public class Main {
          * In die Spalte BESTDAT wird der Parameter best_datum eingetragen, in die Spalte KNR der Parameter
          * kundennummer.
          *
-         * Anschließend wird eine Funktion zur Eingabe von Bestellpositionen aufgerufen.
-         *
          * Positionsnummer hat Autoinkrement in SQL
+         *
+         * Rückgabe = BESTNR neuer Eintrag
          */
 
         String insert_befehl = new String(
@@ -206,7 +209,14 @@ public class Main {
                         "VALUES (" + kundennummer + ", 1, " + best_datum + ")"
         );
 
-        return datenbankGateway.sql_befehl_ausfuehren(insert_befehl);
+        // Insert ausführen
+        ResultSet insert_resultset = datenbankGateway.sql_befehl_ausfuehren(insert_befehl);
+
+        // Spalte ermitteln in der die bestellnummer steht
+        int spalte_bestnr = insert_resultset.findColumn("BESTNR");
+
+        // Bestellnummer zurückgeben, von neuem Eintrag
+        return insert_resultset.getString(spalte_bestnr);
     }
 
     public static ResultSet bestellposition_eingeben(
@@ -241,8 +251,71 @@ public class Main {
         return insert_bpos_resultset;
     }
 
+    public static void bestellvorgang_starten(DatenbankGateway datenbankGateway) throws IOException, SQLException {
 
-    public static void println(String out){
+        /**
+         * Starten den Bestellvorgang.
+         *
+         * Eine Bestellung eingeben und beliebig viele Positionen eingeben.
+         */
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+
+        String datum;
+        String kundennr;
+        String bestellnummer;
+        String eingabebuffer;
+        String artikelnummer;
+        String menge;
+        int menuauswahl;
+
+        println("Kundennummer eingeben:");
+        kundennr = in.readLine();
+
+        println("Datum eingeben DD.MM.YYYY : ");
+        datum = in.readLine();
+
+        // Bestellung anlegen und Bestellnummer speichern
+        bestellnummer = bestellung_eingeben(kundennr, datum, datenbankGateway);
+
+        // Eingabe Bestellpositionen
+
+        while (true) {
+
+            println("1: BestPos anlegen");
+            println("2: Beenden");
+
+            menuauswahl = Integer.parseInt(in.readLine());
+
+            switch (menuauswahl) {
+
+                case 1:
+
+                    println("Artikelnummer eingeben: ");
+                    artikelnummer = in.readLine();
+
+                    println("Menge eingeben: ");
+                    menge = in.readLine();
+
+                    bestellposition_eingeben(datenbankGateway, artikelnummer, bestellnummer, menge);
+
+                    break;
+
+                case 2:
+
+                    return;
+
+                default:
+
+                    return;
+            }
+
+        }
+
+    }
+
+
+    public static void println(Object out){
 
         System.out.println(out);
     }

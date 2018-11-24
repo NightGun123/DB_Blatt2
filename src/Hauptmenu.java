@@ -28,6 +28,7 @@ public class Hauptmenu {
             System.out.println("5: Bestellung suchen");
             System.out.println("6: artikel.dat importieren");
             System.out.println("7: Bestellung berechnen und ausgeben");
+            System.out.println("8: Bestellung eingeben");
             System.out.println("0: Beenden");
             System.out.println();
 
@@ -107,6 +108,12 @@ public class Hauptmenu {
                     benutzereingabe_buffer = in.readLine();
 
                     Main.positionen_von_bestellung_holen(Integer.parseInt(benutzereingabe_buffer), Main.schelling);
+
+                    break;
+
+                case 8:
+
+
 
                     break;
 
