@@ -36,7 +36,13 @@ public class Bpd {
          * Berechnet Wert für algrad und gibt dieses zurück.
          */
 
-        this.algrad = ((int) (this.menge * 100) / this.anzbo) + 1;
+        // TODO DIV/0 verhindern
+        try {
+            this.algrad = ((int) (this.menge * 100) / this.anzbo) + 1;
+        } catch (Exception e) {
+            System.out.println("Fehler in  algrad_berechnen(): " + e.getMessage());
+            this.algrad = 0;
+        }
         return this.algrad;
     }
 
