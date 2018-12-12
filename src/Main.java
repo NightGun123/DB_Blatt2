@@ -57,6 +57,15 @@ public class Main {
         printRS(db.sql_befehl_ausfuehren("Select * From Bestellung"));
     }
 
+    public static void bestellungen_status_1_ausgeben(DatenbankGateway db) throws SQLException {
+
+        /**
+         * Gibt alle Bestellungen mit Status 1 aus
+         */
+
+        printRS(db.sql_befehl_ausfuehren("Select * From Bestellung where status = 1"));
+    }
+
     public static void alle_kunden_ausgeben(DatenbankGateway db) throws SQLException {
 
         /**
