@@ -28,7 +28,7 @@ public class DatenbankGateway {
         }
 
         // Verbindung zur SQL DB herstellen:
-        conn = DriverManager.getConnection("jdbc:oracle:thin:dbprak12/jebe2018@schelling.nt.fh-koeln.de:1521:xe");
+        conn = DriverManager.getConnection("jdbc:oracle:thin:dbprak12/dini18@schelling.nt.fh-koeln.de:1521:xe");
     }
 
     public ResultSet sql_befehl_ausfuehren (String sql){
