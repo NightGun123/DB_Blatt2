@@ -4,8 +4,6 @@ public class Bpd {
      * Die Klasse Bpd enspricht jeweils einer BPOS einer ausgewaehlten Bestellung
      */
 
-    // TODO Beschreibung
-
     // Attribute
     protected int posnr;
     protected String kuehl;

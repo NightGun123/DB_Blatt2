@@ -128,11 +128,13 @@ public class Main {
 
 
 
-    public static ResultSet positionen_von_bestellung_holen(int BESTNR, DatenbankGateway datenbankGateway) throws SQLException {
+    public static ResultSet positionen_von_bestellung_holen(int BESTNR, DatenbankGateway datenbankGateway, boolean silent) throws SQLException {
 
         /**
          * Zur übergebenen Bestellnummer werden alle Positionen zurückgegeben als ResultSet
          */
+
+        // TODO add silent mode, fix calls
 
         ResultSet positionen_der_bestellung =
                 datenbankGateway.sql_befehl_ausfuehren("Select POSNR From BPOS WHERE BESTNR = "+BESTNR);
@@ -141,28 +143,11 @@ public class Main {
 
             int posnr = Integer.parseInt(positionen_der_bestellung.getString(1));
 
-            gesamtpreis_position_SQL_update(posnr,datenbankGateway);
-        }
-
-        rech_summe_SQL_update(BESTNR,datenbankGateway);
-
-        return positionen_der_bestellung;
-    }
-
-    public static ResultSet positionen_von_bestellung_holen_silent(int BESTNR, DatenbankGateway datenbankGateway) throws SQLException {
-
-        /**
-         * Zur übergebenen Bestellnummer werden alle Positionen zurückgegeben als ResultSet
-         */
-
-        ResultSet positionen_der_bestellung =
-                datenbankGateway.sql_befehl_ausfuehren("Select POSNR From BPOS WHERE BESTNR = "+BESTNR);
-
-        while(positionen_der_bestellung.next()) {
-
-            int posnr = Integer.parseInt(positionen_der_bestellung.getString(1));
-
-            gesamtpreis_position_SQL_update(posnr,datenbankGateway);
+            if (silent == false) {
+                gesamtpreis_position_SQL_update(posnr,datenbankGateway, false);
+            } else {
+                gesamtpreis_position_SQL_update(posnr,datenbankGateway, true);
+            }
         }
 
         rech_summe_SQL_update(BESTNR,datenbankGateway);
@@ -171,7 +156,7 @@ public class Main {
     }
 
     public static void gesamtpreis_position_SQL_update(
-            int BPOSNR, DatenbankGateway datenbankGateway) throws SQLException {
+            int BPOSNR, DatenbankGateway datenbankGateway, boolean silent) throws SQLException {
 
         /**
          * Bekommt eine Bestellpositionsnummer übergeben.
@@ -185,7 +170,9 @@ public class Main {
         // Artikelnummer der übergebenen Bestellposition speichern
         String ARTNR = artikelnummer_zu_bpos.getString(1);
 
-        println("DIE ARTNR lautet:"+ARTNR);
+        if (silent == false) {
+            println("DIE ARTNR lautet:"+ARTNR);
+        }
 
         // Preis des gefundenen Artikels abfragen
         ResultSet preis_von_artikel =
@@ -196,12 +183,15 @@ public class Main {
         // Ermittelten Preis speichern
         String APREIS = preis_von_artikel.getString(1);
 
-        println("Der Preis  lautet:"+APREIS);
+        if (silent == false) {
+            println("Der Preis  lautet:"+APREIS);
+        }
 
         // Preis berechnen und SQL Tabelle updaten
         datenbankGateway.sql_befehl_ausfuehren("UPDATE BPOS set WERT = (MENGE*"+APREIS+") WHERE POSNR ="+BPOSNR);
 
     }
+
     public static void rech_summe_SQL_update(int BESTNR, DatenbankGateway datenbankGateway) throws SQLException {
 
         /**
@@ -280,7 +270,7 @@ public class Main {
         letzter_eintrag_bestellpos.next();
 
         gesamtpreis_position_SQL_update(
-                Integer.parseInt(letzter_eintrag_bestellpos.getString(1)), datenbankGateway);
+                Integer.parseInt(letzter_eintrag_bestellpos.getString(1)), datenbankGateway, false);
 
         return letzter_eintrag_bestellpos;
     }
@@ -385,8 +375,7 @@ public class Main {
          */
 
         // Bestellpositionen zu BESTNR holen
-        // TODO fix Nullpointer
-        ResultSet alle_BPOS = positionen_von_bestellung_holen_silent(BESTNR, schelling);
+        ResultSet alle_BPOS = positionen_von_bestellung_holen(BESTNR, schelling, true);
 
         while (alle_BPOS.next()) {
 
@@ -406,7 +395,7 @@ public class Main {
 
             datenhaltung_versanddispo.getInstance().bpdispo.add(tmp_bpd);
         }
-
+        // TODO Nullpointer hier
         printLinkedList(datenhaltung_versanddispo.getInstance().bpdispo);
     }
 
@@ -418,7 +407,6 @@ public class Main {
 
         Iterator<Bpd> it = datenhaltung_versanddispo.getInstance().bpdispo.iterator();
 
-        // TODO ausgabe
         while (it.hasNext()) {
 
             it.next().printOut();
