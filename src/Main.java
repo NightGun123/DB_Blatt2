@@ -372,13 +372,25 @@ public class Main {
             tmp_bpd.posnr = alle_BPOS.getInt(1);
             tmp_bpd.artnr = alle_BPOS.getInt(2);
             tmp_bpd.menge = alle_BPOS.getInt(4);
-            // TODO kuehl
 
+            Artikel tmp_art = new Artikel(tmp_bpd.artnr);
+            tmp_bpd.kuehl = tmp_art.kuehl;
+            tmp_bpd.artbez = tmp_art.artbez;
+            tmp_bpd.anzbo = tmp_art.anzbo;
 
-            // TODO artbez
-            // TODO anzbo
-            // TODO verpackt
-            // TODO algrad
+            // ALGRAD berechnen lassen
+            tmp_bpd.algrad_berechnen();
+
+            datenhaltung_versanddispo.getInstance().bpdispo.add(tmp_bpd);
         }
+    }
+
+    public void printLinkedList(LinkedList<Bpd>) {
+
+        /**
+         * Die übergebene LinkedList wird auf der Konsole ausgegeben.
+         */
+
+
     }
 }

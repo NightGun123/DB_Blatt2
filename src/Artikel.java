@@ -5,6 +5,9 @@ public class Artikel {
 
     /**
      * Artikel Objekt aus der SQL Datenbank
+     *
+     * Der Kontruktor bekommt eine Artikelnummer, alle Artikelattribute werden dann
+     * aus der SQL Datenbank gezogen
      */
 
     // Attribute

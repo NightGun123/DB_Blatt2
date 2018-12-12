@@ -29,12 +29,16 @@ public class Bpd {
         this.anzbo = anzbo;
         this.menge = menge;
         this.verpackt = false;
-        this.algrad = 0;
     }
 
     // Methoden
-    public void algrad_berechnen() {
+    public int algrad_berechnen() {
+
+        /**
+         * Berechnet Wert für algrad und gibt dieses zurück.
+         */
 
         this.algrad = ((int) (this.menge * 100) / this.anzbo) + 1;
+        return this.algrad;
     }
 }
