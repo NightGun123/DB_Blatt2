@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Main {
@@ -385,11 +386,13 @@ public class Main {
         }
     }
 
-    public void printLinkedList(LinkedList<Bpd>) {
+    public void printLinkedList(LinkedList<Bpd> liste) {
 
         /**
          * Die übergebene LinkedList wird auf der Konsole ausgegeben.
          */
+
+        Iterator<Bpd> it = datenhaltung_versanddispo.getInstance().bpdispo.iterator();
 
 
     }

@@ -41,4 +41,25 @@ public class Bpd {
         this.algrad = ((int) (this.menge * 100) / this.anzbo) + 1;
         return this.algrad;
     }
+
+    public void printOut() {
+
+        /**
+         * Konsolenausgabe aller Attribute
+         */
+
+        String ausgabe = new String(
+
+                "POSNR: " + posnr +
+                        " KUEHL: " + kuehl +
+                        " ARTNR: " + artnr +
+                        " ARTBEZ: " + artbez +
+                        " ANZBO: " + anzbo +
+                        " MENGE: "  + menge +
+                        " ALGRAD: " + algrad +
+                        " VERPACKT: " + verpackt
+        );
+
+        System.out.println(ausgabe);
+    }
 }
