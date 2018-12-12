@@ -149,6 +149,27 @@ public class Main {
         return positionen_der_bestellung;
     }
 
+    public static ResultSet positionen_von_bestellung_holen_silent(int BESTNR, DatenbankGateway datenbankGateway) throws SQLException {
+
+        /**
+         * Zur übergebenen Bestellnummer werden alle Positionen zurückgegeben als ResultSet
+         */
+
+        ResultSet positionen_der_bestellung =
+                datenbankGateway.sql_befehl_ausfuehren("Select POSNR From BPOS WHERE BESTNR = "+BESTNR);
+
+        while(positionen_der_bestellung.next()) {
+
+            int posnr = Integer.parseInt(positionen_der_bestellung.getString(1));
+
+            gesamtpreis_position_SQL_update(posnr,datenbankGateway);
+        }
+
+        rech_summe_SQL_update(BESTNR,datenbankGateway);
+
+        return positionen_der_bestellung;
+    }
+
     public static void gesamtpreis_position_SQL_update(
             int BPOSNR, DatenbankGateway datenbankGateway) throws SQLException {
 
@@ -357,14 +378,15 @@ public class Main {
         System.out.println(out);
     }
 
-    public void bpdispo_erstellen(int BESTNR) throws SQLException {
+    public static void bpdispo_erstellen(int BESTNR) throws SQLException {
 
         /**
          * LinkedList fuellen
          */
 
         // Bestellpositionen zu BESTNR holen
-        ResultSet alle_BPOS = positionen_von_bestellung_holen(BESTNR, schelling);
+        // TODO fix Nullpointer
+        ResultSet alle_BPOS = positionen_von_bestellung_holen_silent(BESTNR, schelling);
 
         while (alle_BPOS.next()) {
 
@@ -384,9 +406,11 @@ public class Main {
 
             datenhaltung_versanddispo.getInstance().bpdispo.add(tmp_bpd);
         }
+
+        printLinkedList(datenhaltung_versanddispo.getInstance().bpdispo);
     }
 
-    public void printLinkedList(LinkedList<Bpd> liste) {
+    public static void printLinkedList(LinkedList<Bpd> liste) {
 
         /**
          * Die übergebene LinkedList wird auf der Konsole ausgegeben.
@@ -394,6 +418,10 @@ public class Main {
 
         Iterator<Bpd> it = datenhaltung_versanddispo.getInstance().bpdispo.iterator();
 
+        // TODO ausgabe
+        while (it.hasNext()) {
 
+            it.next().printOut();
+        }
     }
 }

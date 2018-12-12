@@ -125,6 +125,8 @@ public class Hauptmenu {
                     System.out.println("Bestellung auswäheln:");
                     benutzereingabe_buffer = in.readLine();
 
+                    Main.bpdispo_erstellen(Integer.parseInt(benutzereingabe_buffer));
+
                     break;
 
                 case 0:
