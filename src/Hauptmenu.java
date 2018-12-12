@@ -108,7 +108,7 @@ public class Hauptmenu {
 
                     benutzereingabe_buffer = in.readLine();
 
-                    Main.positionen_von_bestellung_holen(Integer.parseInt(benutzereingabe_buffer), Main.schelling, false);
+                    Main.positionen_von_bestellung_ausgeben(Integer.parseInt(benutzereingabe_buffer), Main.schelling, false);
 
                     break;
 

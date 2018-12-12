@@ -13,6 +13,9 @@ public class Main {
 
     public static void main(String args[]){
 
+        // Init LinkedList
+        datenhaltung_versanddispo.getInstance();
+
         println("Starte Programm...");
         System.out.print("Verbindungsaufbau: ");
 
@@ -128,31 +131,25 @@ public class Main {
 
 
 
-    public static ResultSet positionen_von_bestellung_holen(int BESTNR, DatenbankGateway datenbankGateway, boolean silent) throws SQLException {
+    public static void positionen_von_bestellung_ausgeben(int BESTNR, DatenbankGateway datenbankGateway) throws SQLException {
 
         /**
-         * Zur übergebenen Bestellnummer werden alle Positionen zurückgegeben als ResultSet
+         * Zur übergebenen Bestellnummer werden alle Positionen auf der Konsole ausgegeben
          */
-
-        // TODO add silent mode, fix calls
 
         ResultSet positionen_der_bestellung =
                 datenbankGateway.sql_befehl_ausfuehren("Select POSNR From BPOS WHERE BESTNR = "+BESTNR);
+
 
         while(positionen_der_bestellung.next()) {
 
             int posnr = Integer.parseInt(positionen_der_bestellung.getString(1));
 
-            if (silent == false) {
                 gesamtpreis_position_SQL_update(posnr,datenbankGateway, false);
-            } else {
                 gesamtpreis_position_SQL_update(posnr,datenbankGateway, true);
             }
-        }
 
         rech_summe_SQL_update(BESTNR,datenbankGateway);
-
-        return positionen_der_bestellung;
     }
 
     public static void gesamtpreis_position_SQL_update(
@@ -375,9 +372,11 @@ public class Main {
          */
 
         // Bestellpositionen zu BESTNR holen
-        ResultSet alle_BPOS = positionen_von_bestellung_holen(BESTNR, schelling, true);
+        ResultSet alle_BPOS = schelling.sql_befehl_ausfuehren("select * from bpos where bestnr = " + BESTNR);
 
         while (alle_BPOS.next()) {
+
+            // TODO loop wird nie betreten
 
             Bpd tmp_bpd = new Bpd();
 
@@ -395,7 +394,7 @@ public class Main {
 
             datenhaltung_versanddispo.getInstance().bpdispo.add(tmp_bpd);
         }
-        // TODO Nullpointer hier
+
         printLinkedList(datenhaltung_versanddispo.getInstance().bpdispo);
     }
 

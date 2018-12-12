@@ -6,13 +6,18 @@ public class datenhaltung_versanddispo {
      * Enthaelt die LinkedList fuer Bpd Objekte
      */
 
-    protected LinkedList<Bpd> bpdispo;
+    public LinkedList<Bpd> bpdispo;
 
     // Singleton
     private static datenhaltung_versanddispo instanz;
-    private datenhaltung_versanddispo() {}
+    private datenhaltung_versanddispo() {
+        this.bpdispo = new LinkedList<Bpd>();
+    }
 
     public static datenhaltung_versanddispo getInstance() {
+
+        if(instanz == null) instanz = new datenhaltung_versanddispo();
+
         return instanz;
     }
 
