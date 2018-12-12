@@ -29,6 +29,7 @@ public class Hauptmenu {
             System.out.println("6: artikel.dat importieren");
             System.out.println("7: Bestellung berechnen und ausgeben");
             System.out.println("8: Bestellung eingeben");
+            System.out.println("9: Versandplanung starten");
             System.out.println("0: Beenden");
             System.out.println();
 
@@ -115,6 +116,11 @@ public class Hauptmenu {
 
                     Main.bestellvorgang_starten(Main.schelling);
 
+                    break;
+
+                case 9:
+
+                    Main.bestellungen_status_1_ausgeben(Main.schelling);
                     break;
 
                 case 0:
