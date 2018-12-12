@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.LinkedList;
 
 public class Main {
 
@@ -126,7 +127,7 @@ public class Main {
 
 
 
-    public static void positionen_von_bestellung_holen(int BESTNR, DatenbankGateway datenbankGateway) throws SQLException {
+    public static ResultSet positionen_von_bestellung_holen(int BESTNR, DatenbankGateway datenbankGateway) throws SQLException {
 
         /**
          * Zur übergebenen Bestellnummer werden alle Positionen zurückgegeben als ResultSet
@@ -143,6 +144,8 @@ public class Main {
         }
 
         rech_summe_SQL_update(BESTNR,datenbankGateway);
+
+        return positionen_der_bestellung;
     }
 
     public static void gesamtpreis_position_SQL_update(
@@ -351,5 +354,31 @@ public class Main {
     public static void println(Object out){
 
         System.out.println(out);
+    }
+
+    public void bpdispo_erstellen(int BESTNR) throws SQLException {
+
+        /**
+         * LinkedList fuellen
+         */
+
+        // Bestellpositionen zu BESTNR holen
+        ResultSet alle_BPOS = positionen_von_bestellung_holen(BESTNR, schelling);
+
+        while (alle_BPOS.next()) {
+
+            Bpd tmp_bpd = new Bpd();
+
+            tmp_bpd.posnr = alle_BPOS.getInt(1);
+            tmp_bpd.artnr = alle_BPOS.getInt(2);
+            tmp_bpd.menge = alle_BPOS.getInt(4);
+            // TODO kuehl
+
+
+            // TODO artbez
+            // TODO anzbo
+            // TODO verpackt
+            // TODO algrad
+        }
     }
 }

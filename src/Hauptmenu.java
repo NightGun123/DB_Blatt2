@@ -121,6 +121,10 @@ public class Hauptmenu {
                 case 9:
 
                     Main.bestellungen_status_1_ausgeben(Main.schelling);
+
+                    System.out.println("Bestellung auswäheln:");
+                    benutzereingabe_buffer = in.readLine();
+
                     break;
 
                 case 0:

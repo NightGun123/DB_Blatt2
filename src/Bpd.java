@@ -1,7 +1,7 @@
 public class Bpd {
 
     /**
-     * class Bpd
+     * Die Klasse Bpd enspricht jeweils einer BPOS einer ausgewaehlten Bestellung
      */
 
     // TODO Beschreibung
@@ -15,6 +15,9 @@ public class Bpd {
     protected int menge;
     protected int algrad;
     protected boolean verpackt;
+
+    // Standard Konstruktor
+    public Bpd(){};
 
     // Konstruktor
     public Bpd(int posnr, String kuehl, int artnr, String artbez, int anzbo, int menge) {
